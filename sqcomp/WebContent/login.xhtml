@@ -1,0 +1,52 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:p="http://primefaces.org/ui">
+
+<ui:composition template="/WEB-INF/templates/template.xhtml">
+
+    <ui:define name="content">
+    
+    	<h:form id="panelLogin" rendered="#{!usuarioBean.logado}">
+    	
+    		<p:growl id="messages" showDetail="true" showSummary="true"/>
+
+			<p:panel header="Login" style="font-size: 85%; width:95%; height: 100%;">
+	
+				<h:panelGrid columns="2" cellpadding="5" style="width:95%; height: 100%;">
+				
+					<h:outputLabel for="username" value="Username:" />
+					<h:inputText value="#{usuarioBean.usuario.username}" id="username"
+						label="Usuario" />
+	
+					<h:outputLabel for="password" value="Password:" />
+					<h:inputSecret value="#{usuarioBean.usuario.password}" id="password"
+						label="Senha" />
+	
+					<f:facet name="footer">
+						<p:commandButton type="submit" value="Entrar"
+							action="#{usuarioBean.valida()}" async="true"
+							rendered="#{!usuarioBean.logado}" update=":painel"
+							oncomplete="dlg.hide()"
+							onsuccess="/index.xhtml"/>
+						<p:commandButton type="submit" value="Cadastrar"
+							action="#{usuarioBean.cadastrar()}" async="true"
+							rendered="#{!usuarioBean.logado}" update=":painel"
+							oncomplete="dlg.hide()"
+							onsuccess="/index.xhtml"/>
+					</f:facet>
+					
+				</h:panelGrid>
+
+			</p:panel>
+    	
+    	</h:form>
+    
+    </ui:define>
+    
+</ui:composition>
+</html>
