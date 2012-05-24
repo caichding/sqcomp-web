@@ -1,0 +1,122 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+<ui:composition template="/WEB-INF/templates/template.xhtml">
+
+	<ui:define name="content">
+	
+		<h:form id="add" rendered="#{infoBean.atualize() and usuarioBean.logado}">
+			
+			<p:growl id="messages" showDetail="true" showSummary="true"/>
+			
+			<p:accordionPanel activeIndex="-1" rendered="#{infoBean.noticia.id == null}">
+			
+				<p:tab title="Add News">
+					
+					<p:editor value="#{infoBean.noticia.descricao}" height="500" width="1000" required="true"/>  
+  
+				    <h:panelGrid columns="2" style="margin-top:10px">  
+				        <p:commandButton type="submit" value="Salvar" icon="ui-icon-disk" action="#{infoBean.salvarNoticia}" async="true" update=":conceitos,:add"/>    
+				    </h:panelGrid>
+
+				</p:tab>
+				
+			</p:accordionPanel>
+			
+			<p:accordionPanel activeIndex="0" rendered="#{infoBean.noticia.id != null}">
+			
+				<p:tab title="Edit News">
+					
+					<p:editor value="#{infoBean.noticia.descricao}" height="500" width="1000"/>  
+  
+				    <h:panelGrid columns="2" style="margin-top:10px">  
+				        <p:commandButton type="submit" value="Salvar" icon="ui-icon-disk" action="#{infoBean.editarNoticia}" async="true" update=":conceitos,:add"/>    
+				    </h:panelGrid>
+
+				</p:tab>
+			
+			</p:accordionPanel>
+		
+		</h:form>
+		
+		<p:separator rendered="#{usuarioBean.logado}"/>
+		
+		<h:form id="conceitos" style="width:100%;height:100%;">
+		
+			<p:growl id="messages" showDetail="true" showSummary="true"/>
+		
+			<p:dataList value="#{infoBean.noticias}" var="_noticia" 
+				   		paginator="true" rows="5" effectSpeed="fast"
+        				rowsPerPageTemplate="5,10,15" itemType="square"
+        				paginatorPosition="top"
+        				rendered="#{infoBean.noticias != null}">
+        				
+        				<f:facet name="header">Ultima notícas</f:facet>
+				   		
+				   		<p:column>
+					   		<h:outputText value="Last modification: "/>
+					   		<h:outputText value="#{_noticia.data}   " >
+		                		<f:convertDateTime type="both" dateStyle="default" />
+		                	</h:outputText>
+		                	<h:outputText value=" by "/>
+		                	<h:outputText value="#{_noticia.usuarioCadastro.username}"/>
+		                	<p:spacer width="10px"/>
+	                	</p:column>
+	                	
+	                	<p:column rendered="#{usuarioBean.logado}">
+		                	<p:commandLink id="delete" action="#{infoBean.deletarNoticia()}" update=":conceitos" title="Deletar">
+		                		<p:graphicImage value="/img/delete.png"/>
+		                		<f:param name="noticiaId" value="#{_noticia.id}"/>
+		                	</p:commandLink>
+		                	<p:spacer width="10px"/>
+	                	</p:column>
+	                	
+	                	<p:column  rendered="#{usuarioBean.logado}">
+	                		<p:commandLink id="edit" update=":add" title="Editar">
+		                		<p:graphicImage value="/img/edit.png"/>
+		                		<f:param name="noticiaId" value="#{_noticia.id}"/>
+		                	</p:commandLink>
+		                	<p:spacer width="10px"/>
+	                	</p:column>
+	                	
+	                	<p:column rendered="#{_noticia.visivel and usuarioBean.logado}">
+	                		<p:commandLink action="#{infoBean.ocultarNoticia()}" update=":conceitos" title="Ocultar notícia">
+		                		<p:graphicImage value="/img/visible.png"/>
+		                		<f:param name="noticiaId" value="#{_noticia.id}"/>
+		                	</p:commandLink>
+		                	<p:spacer width="10px"/>
+	                	</p:column>
+	                	
+	                	<p:column rendered="#{not _noticia.visivel and usuarioBean.logado}">
+	                		<p:commandLink action="#{infoBean.desocultarNoticia()}" update=":conceitos" title="Habilitar notícia">
+		                		<p:graphicImage value="/img/invisible.png"/>
+		                		<f:param name="noticiaId" value="#{_noticia.id}"/>
+		                	</p:commandLink>
+		                	<p:spacer width="10px"/>
+	                	</p:column>
+	                	
+				   		<br/><br/>
+				   		
+				   		<h:outputText value="#{_noticia.descricao}" escape="false"/>
+
+				   		<br/><br/>
+				   		
+				   		<p:separator/>
+
+				   		<br/><br/>	
+				   		
+			</p:dataList>
+						
+		</h:form>
+		
+	</ui:define>
+	
+</ui:composition>
+
+</html>

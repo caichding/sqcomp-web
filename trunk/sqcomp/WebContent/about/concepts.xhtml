@@ -1,0 +1,48 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+<ui:composition template="/WEB-INF/templates/template.xhtml">
+
+	<ui:define name="content">
+	
+		<h:form id="edit" rendered="#{infoBean.atualize() and usuarioBean.logado}">
+			
+			<p:growl id="messages" showDetail="true" showSummary="true"/>
+			
+			<p:accordionPanel activeIndex="-1">
+			
+				<p:tab title="Editar">
+					
+					<p:editor id="editor" value="#{infoBean.lastInfo.conceitos}" height="500" width="1000"/>  
+  
+				    <h:panelGrid columns="2" style="margin-top:10px">  
+				        <p:commandButton type="submit" value="Salvar" icon="ui-icon-disk" action="#{infoBean.salvarInformacoes}" async="true" update=":conceitos,:edit"/>  
+				        <p:commandButton id="clearButton" type="button" value="Clear" onclick="editor.clear()" icon="ui-icon-close" />  
+				    </h:panelGrid>
+
+				
+				</p:tab>
+			
+			</p:accordionPanel>
+		
+		</h:form>
+		
+		<p:separator rendered="#{usuarioBean.logado}"/>
+		
+		<h:form id="conceitos" style="width:95%;height:100%;margin:20px">
+		
+			<h:outputText value="#{infoBean.lastInfo.conceitos}" escape="false"/>
+		
+		</h:form>
+		
+	</ui:define>
+	
+</ui:composition>
+
+</html>
