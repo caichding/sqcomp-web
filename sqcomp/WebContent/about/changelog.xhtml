@@ -1,0 +1,144 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+<ui:composition template="/WEB-INF/templates/template.xhtml">
+
+	<ui:define name="content">
+	
+		<h:form id="add" rendered="#{infoBean.atualize() and usuarioBean.logado}">
+			
+			<p:growl id="messages" showDetail="true" showSummary="true"/>
+			
+			<p:accordionPanel activeIndex="-1" rendered="#{infoBean.log.id == null}">
+			
+				<p:tab title="Add Change">
+					
+					<h:outputText value="Versão: "/>
+					<p:selectOneMenu value="#{infoBean.log.versao}" required="true">
+						<f:selectItem itemValue="web" itemLabel="web"/>
+						<f:selectItem itemValue="desktop" itemLabel="desktop"/>
+					</p:selectOneMenu>
+					
+					<br/><br/>
+					
+					<p:editor value="#{infoBean.log.descricao}" height="500" width="1000" required="true"/>  
+  
+				    <h:panelGrid columns="2" style="margin-top:10px">  
+				        <p:commandButton type="submit" value="Salvar" icon="ui-icon-disk" action="#{infoBean.salvarLog}" async="true" update=":conceitos,:add"/>    
+				    </h:panelGrid>
+
+				</p:tab>
+				
+			</p:accordionPanel>
+			
+			<p:accordionPanel activeIndex="0" rendered="#{infoBean.log.id != null}">
+			
+				<p:tab title="Edit Change">
+					
+					<h:outputText value="Versão: "/>
+					<p:selectOneMenu value="#{infoBean.log.versao}" required="true">
+						<f:selectItem itemValue="web" itemLabel="web"/>
+						<f:selectItem itemValue="desktop" itemLabel="desktop"/>
+					</p:selectOneMenu>
+					
+					<br/><br/>
+					
+					<p:editor value="#{infoBean.log.descricao}" height="500" width="1000"/>  
+  
+				    <h:panelGrid columns="2" style="margin-top:10px">  
+				        <p:commandButton type="submit" value="Salvar" icon="ui-icon-disk" action="#{infoBean.editarLog}" async="true" update=":conceitos,:add"/>    
+				    </h:panelGrid>
+
+				</p:tab>
+			
+			</p:accordionPanel>
+		
+		</h:form>
+		
+		<p:separator rendered="#{usuarioBean.logado}"/>
+		
+		<h:form id="conceitos" style="width:100%;height:100%;">
+		
+			<p:growl id="messages" showDetail="true" showSummary="true"/>
+		
+			<p:dataList value="#{infoBean.modificacoes}" var="_log" 
+				   		paginator="true" rows="5" effectSpeed="fast"
+        				rowsPerPageTemplate="5,10,15" itemType="square"
+        				paginatorPosition="top"
+        				rendered="#{infoBean.modificacoes != null}"
+        				style="width:100%;height:100%;">
+        				
+        				<f:facet name="header">Log of changes</f:facet>
+				   		
+				   		<p:column>
+					   		<h:outputText value="Last modification: "/>
+					   		<h:outputText value="#{_log.data}" >
+		                		<f:convertDateTime type="both" dateStyle="default" />
+		                	</h:outputText>
+		                	<h:outputText value=" by "/>
+		                	<h:outputText value="#{_log.usuarioCadastro.username}"/>
+		                	<p:spacer width="10px"/>
+	                	</p:column>
+	                	
+	                	<p:column rendered="#{usuarioBean.logado}">
+		                	<p:commandLink id="delete" action="#{infoBean.deletarLog()}" update=":conceitos" title="Deletar">
+		                		<p:graphicImage value="/img/delete.png"/>
+		                		<f:param name="logId" value="#{_log.id}"/>
+		                	</p:commandLink>
+		                	<p:spacer width="10px"/>
+	                	</p:column>
+	                	
+	                	<p:column  rendered="#{usuarioBean.logado}">
+	                		<p:commandLink id="edit" update=":add" title="Editar">
+		                		<p:graphicImage value="/img/edit.png"/>
+		                		<f:param name="logId" value="#{_log.id}"/>
+		                	</p:commandLink>
+		                	<p:spacer width="10px"/>
+	                	</p:column>
+	                	
+	                	<p:column rendered="#{_log.visivel and usuarioBean.logado}">
+	                		<p:commandLink action="#{infoBean.ocultarLog()}" update=":conceitos" title="Ocultar log">
+		                		<p:graphicImage value="/img/visible.png"/>
+		                		<f:param name="logId" value="#{_log.id}"/>
+		                	</p:commandLink>
+		                	<p:spacer width="10px"/>
+	                	</p:column>
+	                	
+	                	<p:column rendered="#{not _log.visivel and usuarioBean.logado}">
+	                		<p:commandLink action="#{infoBean.desocultarLog()}" update=":conceitos" title="Habilitar log">
+		                		<p:graphicImage value="/img/invisible.png"/>
+		                		<f:param name="logId" value="#{_log.id}"/>
+		                	</p:commandLink>
+		                	<p:spacer width="10px"/>
+	                	</p:column>
+	                	
+				   		<br/>
+				   		
+				   		<h:outputText value="Versão: "/>
+				   		<h:outputText value="#{_log.versao}" style="color:blue;"/>
+				   		
+				   		<br/><br/>
+				   		
+				   		<h:outputText value="#{_log.descricao}" escape="false"/>
+
+				   		<br/><br/>
+				   		
+				   		<p:separator/>
+
+				   		<br/><br/>	
+				   		
+			</p:dataList>
+						
+		</h:form>
+		
+	</ui:define>
+	
+</ui:composition>
+
+</html>

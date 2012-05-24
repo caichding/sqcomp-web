@@ -1,0 +1,196 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+<ui:composition template="/WEB-INF/templates/template.xhtml">
+	<ui:define name="content">
+
+		<h1>Info of the system #{sistemaBean.sistema.name}</h1><br />
+
+		<h:form rendered="#{sistemaBean.sistemaDisponivel()}">
+			
+			<p:growl id="messages" showDetail="true" showSummary="true"/>
+    
+			<p:panel header="General">
+			
+				<h:panelGrid columns="2">
+				
+					<h:outputText value="Name: " style="font-weight:bold;"/>
+					<h:outputText value="#{sistemaBean.sistema.name}"/>
+					
+					<h:outputText value="Version: " style="font-weight:bold;"/>
+					<h:outputText value="#{sistemaBean.sistema.version}"/>
+					
+					<h:outputText value="Date Added: " style="font-weight:bold;"/>
+					<h:outputText value="#{sistemaBean.sistema.data}">
+						<f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" />
+					</h:outputText>
+					
+					<h:outputText value="By user: " rendered="#{usuarioBean.logado}" style="font-weight:bold;"/>
+					<h:outputText value="#{sistemaBean.sistema.usuario.username}" rendered="#{usuarioBean.logado}"/>
+					
+					<h:outputText value="Metrics download: " style="font-weight:bold;"/>
+					
+					<h:column>								
+						<h:commandLink>
+							<p:graphicImage value="/img/csv.png"/>
+							<p:dataExporter target="tb" type="csv" fileName="sistemas"/>
+						</h:commandLink>
+						<h:commandLink>
+							<p:graphicImage value="/img/xml.png"/>
+							<p:dataExporter target="tb" type="xml" fileName="sistemas"/>
+						</h:commandLink>
+					</h:column>	
+					
+				</h:panelGrid>
+			
+			</p:panel>
+			
+			<div/>
+			<br/>
+			
+			<p:dataTable id="tb" value="#{sistemaBean.sistema.classes}" var="classe" paginator="true" paginatorPosition="bottom" rows="15"
+						 rowsPerPageTemplate="10,15,20" scrollable="true" style="width:100%;height:50%;text-align:left">
+
+				<f:facet name="header">
+					<h:outputText value="Class details" />
+				</f:facet>
+
+				<p:column headerText="Name of Class" sortBy="#{classe.name}">
+					<h:outputText value="#{classe.name}"/>
+				</p:column>
+					
+				<p:column headerText="Super Entity" sortBy="#{classe.superEntity}">
+					<h:outputText value="#{classe.superEntity}"/>
+				</p:column>
+					
+				<p:column headerText="#{metricas.LOC}" sortBy="#{classe.loc}">
+					<h:outputText value="#{classe.loc}"/>
+				</p:column>
+				
+				<p:column headerText="#{metricas.NOA}" sortBy="#{classe.noa}">
+					<h:outputText value="#{classe.noa}"/>
+				</p:column>
+				
+				<p:column headerText="#{metricas.PUBA}" sortBy="#{classe.nopuba}">
+					<h:outputText value="#{classe.nopuba}"/>
+				</p:column>
+				
+				<p:column headerText="#{metricas.PRIA}" sortBy="#{classe.nopria}">
+					<h:outputText value="#{classe.nopria}"/>
+				</p:column>
+				
+				<p:column headerText="#{metricas.NOAH}" sortBy="#{classe.noia}">
+					<h:outputText value="#{classe.noia}"/>
+				</p:column>
+				
+				<p:column headerText="#{metricas.NOM}" sortBy="#{classe.nom}">
+					<h:outputText value="#{classe.nom}"/>
+				</p:column>
+				
+				<p:column headerText="#{metricas.PUBM}" sortBy="#{classe.nopubm}">
+					<h:outputText value="#{classe.nopubm}"/>
+				</p:column>
+				
+				<p:column headerText="#{metricas.PRIM}" sortBy="#{classe.noprim}">
+					<h:outputText value="#{classe.noprim}"/>
+				</p:column>
+				
+				<p:column headerText="#{metricas.NOMH}" sortBy="#{classe.noih}">
+					<h:outputText value="#{classe.noih}"/>
+				</p:column>
+				
+				<p:column headerText="#{metricas.FIN}" sortBy="#{classe.fin}">
+					<h:outputText value="#{classe.fin}"/>
+				</p:column>
+				
+				<p:column headerText="#{metricas.FOUT}" sortBy="#{classe.fout}">
+					<h:outputText value="#{classe.fout}"/>
+				</p:column>
+				
+				<p:column headerText="#{metricas.NOMO}" sortBy="#{classe.nomo}">
+					<h:outputText value="#{classe.nomo}"/>
+				</p:column>
+				
+				<p:column headerText="#{metricas.NOC}" sortBy="#{classe.noc}">
+					<h:outputText value="#{classe.noc}"/>
+				</p:column>
+				
+				<p:column headerText="#{metricas.TNOC}" sortBy="#{classe.tnoc}">
+					<h:outputText value="#{classe.tnoc}"/>
+				</p:column>
+				
+				<p:column headerText="#{metricas.WOC}" sortBy="#{classe.woc}">
+					<h:outputText value="#{classe.woc}"/>
+				</p:column>
+				
+				<p:column headerText="#{metricas.WMC}" sortBy="#{classe.wmc}">
+					<h:outputText value="#{classe.wmc}"/>
+				</p:column>
+				
+				<p:column headerText="#{metricas.IM}" sortBy="#{classe.im}">
+					<h:outputText value="#{classe.im}"/>
+				</p:column>
+				
+				<p:column headerText="#{metricas.CBC}" sortBy="#{classe.cbc}">
+					<h:outputText value="#{classe.cbc}"/>
+				</p:column>
+				
+				<p:column headerText="#{metricas.LCM}" sortBy="#{classe.lcm}">
+					<h:outputText value="#{classe.lcm}"/>
+				</p:column>
+				
+				<p:column headerText="#{metricas.RFC}" sortBy="#{classe.rfc}">
+					<h:outputText value="#{classe.rfc}"/>
+				</p:column>
+				
+				<p:column headerText="#{metricas.HNL}" sortBy="#{classe.hnl}">
+					<h:outputText value="#{classe.hnl}"/>
+				</p:column>
+				
+			</p:dataTable>
+			
+			<div/>
+			<br/>
+			
+		</h:form>
+		
+		<h:form id="graficos" rendered="#{sistemaBean.sistemaDisponivel()}">	
+			
+			<p:panel header="Distribution of Classes by Metric">
+			
+				<p:messages showDetail="true" showSummary="true"/>
+			
+				<h:outputText value="Select a metric: " style="font-weight:bold;"/>
+				<p:selectOneMenu value="#{m}">
+					<f:selectItem itemLabel="Select ..." itemValue="#{null}"/>
+					<f:selectItems value="#{sistemaBean.metricas}" var="metrica"/>
+					<p:ajax listener="#{sistemaBean.construirGrafico(m)}" update=":graficos"/>
+				</p:selectOneMenu>
+				
+				<div/>
+				<br/>
+			
+				<p:barChart id="gr"
+							value="#{sistemaBean.powerLow}" 
+							legendPosition="ne"
+	            			title="Histogram" 
+	            			style="height:300px" xaxisLabel="#{m}" 
+	            			yaxisLabel="Number of classes"
+	            			rendered="#{sistemaBean.powerLow != null}"/>		
+            			
+            </p:panel>
+            <div/>
+			<br/>	
+            			
+			
+		</h:form>
+
+	</ui:define>
+</ui:composition>
+</html>

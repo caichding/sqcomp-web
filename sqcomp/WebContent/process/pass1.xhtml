@@ -1,0 +1,86 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+<ui:composition template="/WEB-INF/templates/template.xhtml">
+	<ui:define name="content">
+
+		<p:growl id="messages" showDetail="true" showSummary="true"/>
+
+		<h:form id="formularioGeral" enctype="multipart/form-data" rendered="#{clusterBean.create()}">
+		
+					<p:panel header="Select Systems">
+						
+						<center>
+							<p:pickList value="#{clusterBean.sistemas}" var="sistemas"
+								itemValue="#{sistemas.id}" itemLabel="#{sistemas.name}"
+								converter="sistemaConverter"
+								addAllLabel="Add all" addLabel="Add selected"
+								removeAllLabel="Remove all" removeLabel="Remove selected">
+		
+								<f:facet name="sourceCaption">Available Systems</f:facet>
+								<f:facet name="targetCaption">Selected Systems</f:facet>
+		
+								<p:column>#{sistemas.name} - #{sistemas.version}</p:column>
+		
+							</p:pickList>
+						</center>
+						
+					</p:panel>
+					
+					<p/>	
+						
+					<p:panel header="Select Metrics">
+						
+						<center>
+							<p:pickList value="#{clusterBean.metricas}" var="metrics"
+								itemValue="#{metrics}" itemLabel="#{metrics}"
+								addAllLabel="Add all" addLabel="Add selected"
+								removeAllLabel="Remove all" removeLabel="Remove selected"
+								style="margin: auto 0;">
+		
+								<f:facet name="sourceCaption">Available Metrics</f:facet>
+								<f:facet name="targetCaption">Selected Metrics</f:facet>
+		
+								<p:column style="align-text:left">#{metrics}</p:column>
+		
+							</p:pickList>
+						</center>
+					</p:panel>
+					
+				
+					<p:panel header="Others">
+					
+						<center>
+							<div>
+								<h:outputText value="To define a value of X (= minimum number of metrics to similarity between two systems)."/><br/>
+							</div>
+							<br/>
+							<h:outputText value="Value of X: " style="font-weight:bold;"/>
+							<h:inputText id="valor" value="#{clusterBean.valor}"></h:inputText>
+						</center>
+					 
+						
+					</p:panel>	
+						
+			
+			<br/>
+			<br/>
+
+			<p:commandButton icon="ui-icon-check" value="Start" ajax="false" actionListener="#{clusterBean.calcular}" onclick="load.show()" onstart="button.disable()" oncomplete="load.hide()" widgetVar="button"/>
+			
+			<p:panel visible="false" widgetVar="load">
+				<p:graphicImage value="../img/ajaxloading.gif" />
+				<h:outputText value=" Processing, wait ...."/>
+			</p:panel>
+
+		</h:form>
+			
+	</ui:define>
+</ui:composition>
+</html>

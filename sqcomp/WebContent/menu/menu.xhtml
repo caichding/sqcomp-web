@@ -1,0 +1,61 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:form id="painel">
+
+	<p:growl id="messages" showDetail="true" showSummary="true"/>
+
+	<p:panel header="Logout" rendered="#{usuarioBean.logado}" style="font-size: 90%; width:95%; height: 100%;">
+
+			<h:outputText>You are logged as #{usuarioBean.usuario.username}</h:outputText>
+			
+			<br/>
+			
+			<p:commandButton value="logout" 
+							 actionListener="#{usuarioBean.deslogar()}" 
+							 update=":painel" async="true"  
+							 oncomplete="dlg2.hide()" 
+							 onsuccess="/index.xhtml"/>
+
+	</p:panel>
+	
+	<p:menu style="width:95%; height: 100%;">
+
+		<p:submenu label="Home">
+			<p:menuitem value="Home"  url="/index.xhtml"/>
+		</p:submenu>
+
+		<p:submenu label="Approach">
+
+			<p:menuitem value="The problem" url="/about/problem.xhtml"/>
+			<p:menuitem value="Concepts" url="/about/concepts.xhtml"/>
+			<p:menuitem value="Web version" url="/process/pass1.xhtml"/>
+			<p:menuitem value="Desktop version" url="/about/desktop.xhtml"/>
+
+		</p:submenu>
+
+		<p:submenu label="Data Set">
+
+			<p:menuitem value="Overview" url="/about/systems.xhtml"/>
+			<p:menuitem value="Systems" url="/systems/list.xhtml" />
+			<p:menuitem value="Register system" url="/systems/cadastrar.xhtml" rendered="#{usuarioBean.logado}" />
+
+		</p:submenu>
+		
+		<p:submenu label="Info">
+
+			<p:menuitem value="News"  url="/about/news.xhtml"/>
+			<p:menuitem value="Change log" url="/about/changelog.xhtml"/>
+			<!-- p:menuitem value="About us"  url="/about/aboutus.xhtml"/>  -->
+			<p:menuitem value="Contact" url="/about/contact.xhtml"/>
+
+		</p:submenu>
+
+	</p:menu>
+
+</h:form>
+
+</html>

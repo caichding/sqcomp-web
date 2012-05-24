@@ -1,0 +1,77 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+<ui:composition template="/WEB-INF/templates/template.xhtml">
+	<ui:define name="content">
+
+		<h:form id="consult" enctype="multipart/form-data">
+		
+			<p:growl id="messages" showDetail="true" showSummary="true"/>
+
+			<h1>List of the systems in the current dataset</h1>
+			<br />
+			<p:dataTable id="basic" var="system" value="#{sistemaBean.todas}" sortBy="#{system.name}">
+
+				<p:column id="nameHeader">
+					<f:facet name="header">Name</f:facet>
+					<p:commandLink value="#{system.name}" ajax="false" actionListener="#{sistemaBean.verSistema()}">
+						<f:param name="idSistema" value="#{system.id}"/>
+					</p:commandLink>
+				</p:column>
+
+				<p:column id="versionHeader">
+					<f:facet name="header">Version</f:facet>
+					<h:outputText value="#{system.version}" />
+				</p:column>
+				
+				<p:column id="opcoes" rendered="#{usuarioBean.logado}" style="text-align:center;">
+					<f:facet name="header">Options</f:facet>
+					<p:commandLink update=":dialogs:confirmDialog" oncomplete="confirmation.show();" title="Delete">
+						<p:graphicImage value="/img/delete.png"/>
+						<f:setPropertyActionListener  target="#{sistemaBean.sistema.id}" value="#{system.id}" />
+					</p:commandLink>
+					<p:spacer width="10px"/>
+					<p:commandLink action="#{sistemaBean.ocultar}" update=":consult" title="Make available/unavailable">
+						<p:graphicImage value="/img/visible.png" rendered="#{system.disponivel}" alt="Make unavailable"/>
+						<p:graphicImage value="/img/invisible.png" rendered="#{!system.disponivel}" alt="Make available"/>
+		                <f:param name="id" value="#{system.id}"/>
+					</p:commandLink>
+				</p:column>
+
+			</p:dataTable>
+
+
+
+		</h:form>
+		
+		<h:form id="dialogs">
+		
+			<p:confirmDialog id="confirmDialog"
+				message=" Are you sure?}"
+				header="Delete system" severity="alert"
+				widgetVar="confirmation"
+				appendToBody="true">
+				
+
+				<p:commandButton value="Yes"
+								 oncomplete="confirmation.hide()"
+								 action="#{sistemaBean.deleta}" update=":consult">
+									<f:param name="id" value="#{sistemaBean.sistema.id}"/>
+				</p:commandButton>	
+				<p:commandButton id="decline" value="No" onclick="confirmation.hide()" />
+
+			</p:confirmDialog>
+
+			
+
+		</h:form>
+
+	</ui:define>
+</ui:composition>
+</html>

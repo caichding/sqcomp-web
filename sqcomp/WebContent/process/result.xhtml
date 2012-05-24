@@ -1,0 +1,160 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+<ui:composition template="/WEB-INF/templates/template.xhtml">
+
+	<ui:define name="content">
+
+		<h:form id="formularioGeral" rendered="#{clusterBean.processo != null}">
+		
+			<p:panel header="General Information">
+			
+					<h:panelGrid columns="2" cellpadding="30px" style="width:100%;height:100%">
+					
+						<h:column style="width:50%;height:100%">
+				
+							<h3><h:outputText value="Sistemas selecionados (#{clusterBean.sistemas.target.size()}): " /></h3>
+							<p:scrollPanel style="width:100%;height:200px" mode="native">
+								<ui:repeat value="#{clusterBean.sistemas.target}" var="sistema">
+									<a style="font-weight:bold;font-size: 20px;">&#187;</a>
+									<h:outputText value=" #{sistema.name} - #{sistema.version}"/><br/>
+								</ui:repeat>
+							</p:scrollPanel>
+							<div/>
+						
+						</h:column>
+						
+						<h:column style="width:50%;height:100%">
+							
+							<h3><h:outputText value="Metricas selecionadas (#{clusterBean.metricas.target.size()}): " /></h3>
+							<p:scrollPanel style="width:100%;height:200px" mode="native">
+								<ui:repeat value="#{clusterBean.metricas.target}" var="metricas">
+									<a style="font-weight:bold;font-size: 20px;">&#187;</a>
+									<h:outputText value=" #{metricas}"/><br/>
+								</ui:repeat>
+							</p:scrollPanel>
+							<div/>
+						
+						</h:column>
+					
+					</h:panelGrid>
+					
+					<h3><h:outputText value="Cliques of the graph: " /></h3>
+					<p:selectOneMenu id="cliqueList" value="#{clusterBean.clique}">
+						<f:selectItem value="#{clusterBean.sistemasSelecionados}" style="width:100%;height:100%"/>
+						<f:selectItems value="#{clusterBean.cliques}" var="clique" itemLabel="#{clique.size()} - #{clique.toString()}" itemValue="#{clique.hashCode()}" style="width:100%;height:100%"/>
+						<p:ajax update=":imageForm" listener="#{clusterBean.getGraph()}" async="false"/>
+					</p:selectOneMenu>
+					<br/>
+					
+			</p:panel>
+			
+			<div/>
+			<br/>
+			
+		</h:form>
+		
+		<h:form id="imageForm" rendered="#{clusterBean.processo != null}">
+			<p:panel header="Grafo resultante">
+				<div align="center">
+					<p:graphicImage id="image" value="#{clusterBean.graphImage}" rendered="#{clusterBean.graphImage != null}"/>
+				</div>
+			</p:panel>
+			<br/>
+		</h:form>
+		
+		<h:form id="matrizForm" rendered="#{clusterBean.processo != null}">
+		
+			<p:panel header="Amount of Metrics between systems">
+				
+				<p:dataTable id="tb1" value="#{clusterBean.matrizNaoDiscretizada}" var="_row">
+				
+					<p:column headerText="System">
+						<h:outputText value="#{_row[0]}"/>
+					</p:column>
+					
+					<p:columns var="sistema" value="#{clusterBean.processo.sistemas}" columnIndexVar="indexCol">
+						<f:facet name="header"><h:outputText value="#{sistema}"/></f:facet>
+						<h:outputText value="#{_row[indexCol+1]}"/>
+					</p:columns>
+				
+					
+				
+				</p:dataTable>
+								
+			</p:panel>
+			
+			<br/>
+			
+		</h:form>
+		
+		<h:form id="clusterForm" rendered="#{clusterBean.processo != null}">
+		
+			<p:panel header="Primary Clusters" style="width:100%;">
+			
+				<h:outputText value="Select the Metric:  " style="font-weight:bold;"/>
+				<p:selectOneMenu value="#{m}" >
+					<f:selectItem itemLabel="Select the Metric" itemValue="#{null}" style="width:100%;"/>
+					<f:selectItems value="#{clusterBean.processo.metricas}" var="metrica"  style="width:100%;"/>
+					<p:ajax update=":clusterForm" listener="#{clusterBean.constructModel(m)}"/>
+				</p:selectOneMenu>
+				
+				<br/><br/>
+				
+				<p:dataTable id="tb2" value="#{clusterBean.model}" var="_row" rendered="#{clusterBean.model != null and m != null}">
+				
+					<f:facet name="header">Primary Cluster for metric #{m}</f:facet>
+					
+					<p:column>
+						<f:facet name="header">System</f:facet>
+						<h:outputText value="#{_row[0]}"/>
+					</p:column>
+					
+					<p:column>
+						<f:facet name="header">G1</f:facet>
+						<h:outputText value="#{_row[1]}"/>
+					</p:column>
+					
+					<p:column>
+						<f:facet name="header">G2</f:facet>
+						<h:outputText value="#{_row[2]}"/>
+					</p:column>
+					
+					<p:column>
+						<f:facet name="header">G3</f:facet>
+						<h:outputText value="#{_row[3]}"/>
+					</p:column>
+					
+					<p:column>
+						<f:facet name="header">G4</f:facet>
+						<h:outputText value="#{_row[4]}"/>
+					</p:column>
+					
+					<p:column>
+						<f:facet name="header">G5</f:facet>
+						<h:outputText value="#{_row[5]}"/>
+					</p:column>
+					
+				
+				</p:dataTable>
+				
+			</p:panel>
+			
+			<br/>
+			
+		</h:form>
+		
+		<h:outputText value="Please, repeat the process." rendered="#{clusterBean.processo eq null}"/>
+		
+		
+		
+			
+	</ui:define>
+</ui:composition>
+</html>
